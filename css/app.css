@@ -1,11 +1,11 @@
 /* Lista de Navidad — estilos */
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#24402f}
+html,body{margin:0;height:100%;background:#7d8a6a url(../img/cuadros.jpg) center top/cover}
 body{font-family:Inter,system-ui,sans-serif;color:#2f3a5c;-webkit-font-smoothing:antialiased}
-#app{position:relative;width:100%;max-width:440px;height:100vh;height:100dvh;margin:0 auto;overflow:hidden;background:#24402f}
+#app{position:relative;width:100%;max-width:440px;height:100vh;height:100dvh;margin:0 auto;overflow:hidden}
 button,input,textarea{font:inherit}
 .oculto-accesible{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.pantalla{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden}
+.pantalla{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;padding-top:env(safe-area-inset-top);box-sizing:border-box}
 
 /* Texturas */
 .cuadros{background:url(../img/cuadros.jpg) center/cover}
