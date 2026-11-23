@@ -103,7 +103,12 @@ async function cargar() {
 
   if (!st.perfiles.length) {
     const { data: sol } = await sb.from('solicitudes_familia').select('id,nombre_familia,estado').eq('user_id', st.uid).eq('estado', 'pendiente').limit(1);
-    if (sol && sol.length) { st.solicitud = sol[0]; return ir('espera'); }
+    if (sol && sol.length) {
+      st.solicitud = sol[0];
+      clearTimeout(st.vigilaEspera);
+      st.vigilaEspera = setTimeout(() => { if (st.pantalla === 'espera') cargar(); }, 20000);
+      return ir('espera');
+    }
     await prepararPerfil();
     return ir('perfil');
   }
@@ -276,8 +281,7 @@ function pMensaje(titulo, texto, boton, accion) {
   </div></main>`;
 }
 const pEspera = () => pMensaje('Solicitud enviada',
-  `${esSanta() ? 'Santa revisará' : 'Los Reyes revisarán'} tu solicitud para «${esc(st.solicitud?.nombre_familia || '')}». Te avisaremos por correo en cuanto tu familia esté lista.`,
-  'Salir', 'salir');
+  `${esSanta() ? 'Santa revisará' : 'Los Reyes revisarán'} tu solicitud para «${esc(st.solicitud?.nombre_familia || '')}». Te avisaremos por correo en cuanto tu familia esté lista. Esta pantalla se abrirá sola cuando te aprueben.`);
 const pDormido = () => pMensaje('El taller descansa',
   'Los elfos están de vacaciones. La carta vuelve a abrirse el 1 de noviembre: ¡pórtate bien hasta entonces!', 'Salir', 'salir');
 
