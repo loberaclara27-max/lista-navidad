@@ -281,7 +281,7 @@ function pMensaje(titulo, texto, boton, accion) {
   </div></main>`;
 }
 const pEspera = () => pMensaje('Solicitud enviada',
-  `${esSanta() ? 'Santa revisará' : 'Los Reyes revisarán'} tu solicitud para «${esc(st.solicitud?.nombre_familia || '')}». Te avisaremos por correo en cuanto tu familia esté lista. Esta pantalla se abrirá sola cuando te aprueben.`);
+  `${esSanta() ? 'Santa revisará' : 'Los Reyes revisarán'} tu solicitud para «${esc(st.solicitud?.nombre_familia || '')}». Suele tardar menos de un día. Si dejas esta pantalla abierta, entrarás sola en cuanto te aprueben; si la cierras, vuelve a abrir la app más tarde.`);
 const pDormido = () => pMensaje('El taller descansa',
   'Los elfos están de vacaciones. La carta vuelve a abrirse el 1 de noviembre: ¡pórtate bien hasta entonces!', 'Salir', 'salir');
 
