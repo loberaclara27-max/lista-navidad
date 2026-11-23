@@ -174,11 +174,12 @@ function pCodigo() {
   return `
   <main class="pantalla cuadros"><div class="escena">
     <div class="escala"><div class="reverso">
-      <div style="position:absolute;top:20px;left:40px;right:40px;text-align:center;color:#3a2a22">
-        <p style="margin:0;font-size:14px;font-weight:600;line-height:1.35">${esSanta() ? 'Los elfos' : 'Los pajes'} te han enviado un código</p>
-        <p style="margin:3px 0 0;font-size:12.5px;line-height:1.35;color:#5e4f48">Míralo en ${esc(st.email)} y escríbelo aquí</p>
+      <div style="position:absolute;top:10px;left:26px;right:26px;text-align:center;color:#3a2a22;background:#fbf5ea;border-radius:10px;padding:8px 12px;box-shadow:0 3px 8px rgba(40,10,8,.3)">
+        <p style="margin:0;font-size:14px;font-weight:600;line-height:1.3">${esSanta() ? 'Los elfos' : 'Los pajes'} te han enviado un código</p>
+        <p style="margin:2px 0 0;font-size:12.5px;line-height:1.35;color:#4a3d36">Míralo en ${esc(st.email)} y escríbelo aquí</p>
+        <p style="margin:4px 0 0;font-size:12px;line-height:1.35;color:#8e1f20;font-weight:600">⚠️ ¿No llega? Mira en SPAM, es de Willy</p>
       </div>
-      <img src="img/${esSanta() ? 'lacre-santa' : 'lacre-reyes'}.png" alt="" aria-hidden="true" style="position:absolute;left:50%;top:97px;width:88px;height:auto;transform:translateX(-50%) rotate(-6deg);filter:drop-shadow(0 4px 6px rgba(40,10,8,.45))">
+      <img src="img/${esSanta() ? 'lacre-santa' : 'lacre-reyes'}.png" alt="" aria-hidden="true" style="position:absolute;left:50%;top:104px;width:80px;height:auto;transform:translateX(-50%) rotate(-6deg);filter:drop-shadow(0 4px 6px rgba(40,10,8,.45))">
       <div style="position:absolute;left:0;right:0;top:192px;display:flex;justify-content:center">
         <div style="position:relative;display:flex;gap:8px">
           ${casillas}
