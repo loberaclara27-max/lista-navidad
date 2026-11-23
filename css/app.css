@@ -114,3 +114,157 @@ button,input,textarea{font:inherit}
 /* Cargando y mensajes */
 .cargando{flex:1;display:flex;align-items:center;justify-content:center;color:#f3e9d6;font-family:'Courier Prime',monospace;letter-spacing:2px;text-transform:uppercase;font-size:12px}
 .mensaje-central{width:318px;max-width:100%}
+
+/* ---------- Mis tareas y Mi Casa ---------- */
+.fondo-tareas{background:#8e1f20 url(../img/fondo-tareas.jpg) center/cover}
+.fondo-casa{background:#1d2a4a url(../img/fondo-casa.jpg) center/cover}
+.columna{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding-top:12px}
+.cartel{width:220px;height:91px;object-fit:contain;flex-shrink:0;display:block;margin-bottom:6px;filter:drop-shadow(0 6px 10px rgba(20,5,5,.45))}
+.tira-pestanas{display:flex;align-items:center;gap:12px;padding:3px 18px;transform:rotate(-1deg);flex-shrink:0}
+.tira-pestanas.cuatro{gap:6px;padding:3px 12px}
+.pildora{position:relative;min-height:40px;padding:0 6px;background:none;border:none;cursor:pointer;font-family:'Courier Prime','Courier New',monospace;font-size:12.5px;letter-spacing:1.3px;text-transform:uppercase;color:rgba(58,51,48,.7)}
+.cuatro .pildora{font-size:11.5px;letter-spacing:1px;padding:0 5px}
+.pildora[aria-selected="true"]{color:#2b2320;font-weight:700}
+.pildora svg{position:absolute;left:-8px;top:1px;width:calc(100% + 16px);height:calc(100% - 2px);overflow:visible}
+.claro-rojo{color:#fbf3e8;text-shadow:0 1px 3px rgba(40,5,5,.85)}
+.claro-azul{color:#f3ecdc;text-shadow:0 1px 3px rgba(5,10,30,.85)}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 7px;border-radius:999px;font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:11.5px;line-height:1.2;white-space:nowrap;text-shadow:none}
+.chip-punto{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
+.boton-peq{min-height:46px;padding:0 24px;font-size:15px;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.boton-mini{min-height:34px;padding:0 12px;font-size:12px;display:inline-flex;align-items:center;gap:5px;color:#2b2320}
+.centrado{align-self:center}
+.boton-sec.borde{border:1.5px solid rgba(58,51,48,.3);background:rgba(255,255,255,.7);color:#2b2320;display:inline-flex;align-items:center;gap:5px}
+.boton-sec.verde{background:#24402f;color:#fbf3e8;display:inline-flex;align-items:center;gap:5px}
+.toast{position:absolute;left:16px;right:16px;bottom:92px;z-index:15;margin:0;padding:10px 14px;border-radius:10px;background:#fbf3e8;color:#8e1f20;font-size:13.5px;font-weight:600;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.cerrar{width:44px;height:44px;margin:-8px -8px 0 0;background:none;border:none;cursor:pointer;color:#5e4f48;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* Adoptar / Revisar */
+.linea-contador{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 22px 8px;flex-shrink:0}
+.linea-contador p{margin:0;font-size:11px;letter-spacing:1px}
+.boton-mini{white-space:nowrap}
+.sub-interruptor{display:flex;gap:4px;margin:10px 0;padding:4px;border-radius:999px;background:rgba(251,243,232,.94);box-shadow:0 4px 10px rgba(40,8,8,.35);flex-shrink:0}
+.sub-interruptor button{min-height:38px;display:inline-flex;align-items:center;gap:7px;padding:0 14px;border-radius:999px;border:none;cursor:pointer;font-weight:600;font-size:13px;background:transparent;color:#3a3330}
+.sub-interruptor button[aria-pressed="true"]{background:#24402f;color:#fbf3e8}
+.globo{min-width:20px;height:20px;padding:0 5px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;background:#9e2a2b;color:#fbf3e8}
+[aria-pressed="true"] .globo{background:#fbf3e8;color:#24402f}
+.zona-tarjeta{flex:1;min-height:0;width:100%;display:flex;align-items:flex-start;justify-content:center}
+.escala-tarjeta{position:relative;width:290px;height:429px;flex-shrink:0;transform-origin:top center;transform:scale(var(--kt,1))}
+.zona-tarjeta.pequena .escala-tarjeta{width:262px;height:388px;transform:scale(var(--kt,1))}
+.detras-tarjeta{position:absolute;inset:0;transform:rotate(3.5deg) scale(.97)}
+.tarjeta-arrastre{position:absolute;inset:0;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;transition:transform .3s ease;--si:0;--no:0;filter:drop-shadow(0 14px 22px rgba(40,8,8,.5)) drop-shadow(0 2px 3px rgba(40,8,8,.35))}
+.tarjeta-arrastre.arrastrando{transition:none}
+.tarjeta-arrastre.sale-der{transform:translateX(480px) rotate(26deg);--si:1}
+.tarjeta-arrastre.sale-izq{transform:translateX(-480px) rotate(-26deg);--no:1}
+.hoja-lisa{background:url(../img/hoja-lisa.png) 0 0/100% 100% no-repeat}
+.sombra-roja{filter:drop-shadow(0 14px 22px rgba(40,8,8,.45))}
+.sombra-azul{filter:drop-shadow(0 10px 18px rgba(5,10,30,.55)) drop-shadow(0 2px 3px rgba(5,10,30,.35))}
+.hoja-regalo{position:absolute;left:0;top:0;width:320px;height:473px;transform:scale(.90625);transform-origin:0 0;background:url(../img/hoja-lisa.png) 0 0/100% 100% no-repeat}
+.hoja-regalo.pequena{transform:scale(.81875)}
+.cabecera-regalo{position:absolute;left:22px;top:30px;width:146px}
+.cabecera-regalo.ancha{width:276px}
+.tabla-regalo{position:absolute;left:22px;right:22px;border:1.2px solid #3a3330;display:flex;flex-direction:column;max-height:280px;overflow:hidden}
+.tabla-regalo>*+*,.tabla>*+*{border-top:1.2px solid #3a3330}
+.dos-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.dos-col>.celda+.celda{border-top:none;border-left:1.2px solid #3a3330}
+.m27{font-size:27px;line-height:1.05;padding-top:2px}.m22{font-size:22px;line-height:1.05;padding-top:2px}.m21{font-size:21px;line-height:1.05;padding-top:2px}.m20{font-size:20px;line-height:1.05}
+.fila-enlaces{min-height:40px;display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;padding:4px 10px}
+.enlace{min-height:34px;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:#9e2a2b;text-decoration:underline;text-underline-offset:3px}
+.polaroid-regalo{position:absolute;left:164px;top:4px;width:150px;padding:8px 8px 24px;background:#f8f5ee;transform:rotate(3deg);box-shadow:0 6px 10px rgba(40,22,10,.35),0 1px 2px rgba(40,22,10,.3)}
+.polaroid-regalo .foto{width:134px;height:134px}
+.foto{background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(58,51,48,.12);font-size:58px;line-height:1}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.sello-arrastre{position:absolute;top:250px;padding:6px 14px;border-radius:6px;font-family:'Courier Prime','Courier New',monospace;font-weight:700;letter-spacing:3px;background:rgba(251,243,232,.4);pointer-events:none}
+.sello-si{left:70px;border:3px double #9e2a2b;color:#9e2a2b;font-size:30px;transform:rotate(-14deg);opacity:var(--si)}
+.sello-no{right:54px;border:3px double #5e4f48;color:#5e4f48;font-size:26px;transform:rotate(12deg);opacity:var(--no)}
+.botones-adoptar{display:flex;align-items:flex-start;justify-content:center;gap:56px;padding:10px 0 12px;flex-shrink:0}
+.boton-con-texto{display:flex;flex-direction:column;align-items:center;gap:5px}
+.boton-con-texto .maquina{font-size:10.5px}
+.redondo{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;color:#5e4f48;box-shadow:0 6px 12px rgba(40,8,8,.45)}
+.redondo.verde{background:#24402f;color:#fbf3e8;box-shadow:0 6px 12px rgba(40,8,8,.45),inset 0 0 0 2px rgba(201,162,74,.75)}
+.controles-revisar{width:100%;display:flex;flex-direction:column;gap:6px;padding:8px 0 10px;flex-shrink:0}
+.fila-control{display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.fila-control .maquina{font-size:11px}
+.enlace-claro{min-height:36px;background:none;border:none;cursor:pointer;font-size:11px;color:#fbf3e8;text-decoration:underline;text-underline-offset:3px;text-shadow:0 1px 3px rgba(40,5,5,.8)}
+.fila-elfos{display:flex;gap:10px;overflow-x:auto;padding:2px 22px 6px}
+.elfo-boton{flex-shrink:0;width:58px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;background:none;border:none;cursor:pointer}
+.circulo-elfo{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden}
+.circulo-elfo img{width:100%;height:100%;object-fit:cover}
+.nombre-elfo{font-size:11.5px;font-weight:600;color:#fbf3e8;text-shadow:0 1px 3px rgba(40,5,5,.85);max-width:58px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fila-ocasiones{display:flex;flex-wrap:wrap;gap:8px;padding:0 22px}
+.opcion{min-height:36px;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 10px;border-radius:999px;cursor:pointer;font-weight:600;font-size:13px;background:rgba(255,255,255,.6);border:1.5px solid rgba(58,51,48,.25);color:#2b2320}
+.opcion-crema{background:#fbf3e8;border:none;min-height:40px;padding:0 14px;box-shadow:0 4px 8px rgba(40,8,8,.4)}
+.opcion-fecha{font-weight:400;color:#5e4f48;font-size:11.5px}
+.opciones{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0 2px}
+.centro-vacio{flex:1;display:flex;align-items:flex-start;justify-content:center;padding-top:20px}
+.vacio-tarjeta{width:290px;padding:34px 26px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;transform:rotate(-1.5deg);align-self:center}
+
+/* Listas (pendientes, listos, casa) */
+.scroll-lista{flex:1;min-height:0;width:100%;overflow-y:auto;padding:8px 20px 28px 26px;display:flex;flex-direction:column;gap:12px}
+.scroll-casa{padding:14px 18px 28px}
+.marcadores{display:flex;justify-content:center;gap:14px;margin:4px 0 2px}
+.tablero-peq{width:auto;height:auto;flex:1;max-width:160px;align-items:center;gap:8px;padding:10px 10px 12px}
+.tablero-peq>.maquina{font-size:10px;color:#f3e9d6;letter-spacing:1.8px;text-align:center}
+.tablero-peq .ficha-digito{width:30px;height:44px;font-size:24px}
+.euro{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:20px;color:#f3e9d6;margin-left:3px}
+.grupo{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.cabecera-grupo{margin:0;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#fbf3e8;text-shadow:0 1px 3px rgba(40,5,5,.8)}
+.raya{flex:1;border-top:1px dashed rgba(251,243,232,.6)}
+.etiqueta-caja{position:relative;filter:drop-shadow(0 6px 8px rgba(40,8,8,.45)) drop-shadow(0 1px 2px rgba(40,8,8,.3))}
+.etiqueta-caja.azul{filter:drop-shadow(0 5px 7px rgba(5,10,30,.5));margin-left:8px}
+.tag{position:relative;width:100%;min-height:62px;display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:10px 14px 8px 40px;border:none;cursor:pointer;text-align:left;clip-path:polygon(20px 0,100% 0,100% 100%,20px 100%,0 50%);font:inherit;color:inherit}
+.tag.estatica{cursor:default}
+.tag:focus-visible{outline:2px dashed #9e2a2b;outline-offset:-6px}
+.agujero{position:absolute;left:13px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#7a1919;box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 0 0 2px rgba(201,162,74,.8)}
+.azul .agujero{background:#1d2a4a}
+.cordel{position:absolute;left:-22px;top:50%;width:40px;height:30px;margin-top:-17px;overflow:visible;z-index:1}
+.para-linea{font-size:10.5px;letter-spacing:1.6px;padding-right:110px;min-height:22px;display:flex;align-items:center;gap:6px}
+.linea-escondite{display:flex;align-items:baseline;gap:6px;margin-top:2px}
+.aviso-etiqueta{margin-top:4px;font-size:12.5px;font-weight:600;color:#8e1f20}
+.ficha-tarea{gap:12px;padding:14px 14px 10px}
+.tabla{border:1.2px solid #3a3330;display:flex;flex-direction:column}
+.nota-peq{font-size:9.5px;color:#5e4f48;padding-top:4px;text-transform:none;letter-spacing:.3px;font-family:Inter,sans-serif}
+.fila-pagadores{display:flex;gap:8px;overflow-x:auto;padding:8px 10px 4px 2px}
+.pagador{flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;background:none;border:none;cursor:pointer}
+.circulo-pagador{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;background:rgba(255,255,255,.55);border:1.5px solid rgba(58,51,48,.3)}
+.circulo-pagador img{width:100%;height:100%;object-fit:cover}
+.circulo-pagador.activo{background:#fff7ec;border:2.5px solid #9e2a2b;box-shadow:0 0 0 3px rgba(158,42,43,.15)}
+.nombre-pagador{font-size:11.5px;color:rgba(58,51,48,.8);max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[aria-checked="true"]>.nombre-pagador{color:#2b2320;font-weight:700}
+.velo-tareas{background:rgba(52,12,12,.45)}
+.velo-casa{background:rgba(8,14,35,.55)}
+select.campo-ficha{-webkit-appearance:none;appearance:none;font-family:Caveat,cursive;font-size:23px}
+.emoji-campo{font-family:Inter,system-ui,sans-serif;font-size:22px;text-align:center}
+
+/* Mi Casa */
+.rejilla-polaroids{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 6px}
+.miembro{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;background:none;border:none;cursor:pointer}
+.miembro:focus-visible,.fila-papel:focus-visible,.volver:focus-visible{outline:2px dashed #f3ecdc;outline-offset:3px}
+.polaroid{box-sizing:border-box;width:100px;padding:6px 6px 0;background:#f8f5ee;border-radius:2px;box-shadow:0 7px 12px rgba(5,10,30,.5),0 1px 2px rgba(5,10,30,.35);transform:rotate(var(--giro,0deg))}
+.polaroid .foto{width:88px;height:88px;font-size:40px}
+.polaroid .pie{height:30px;display:flex;align-items:center;justify-content:center;font-family:Caveat,cursive;font-size:21px;line-height:1;color:#2f3a5c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.polaroid.grande{width:124px;padding:8px 8px 0;flex-shrink:0}
+.polaroid.grande .foto{width:108px;height:108px;font-size:54px}
+.polaroid.grande .pie{height:24px}
+.bajo-polaroid{display:flex;align-items:center;gap:6px}
+.fila-papel{width:100%;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 14px;border:none;border-radius:6px;cursor:pointer;text-align:left;font:inherit;color:inherit;box-shadow:0 5px 10px rgba(5,10,30,.45)}
+.fila-papel.estatica{cursor:default}
+.tarjeta-ocasion{padding:12px 14px;border-radius:8px}
+.circulo-blanco{width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden}
+.circulo-blanco img{width:100%;height:100%;object-fit:cover}
+.circulo-blanco.grande{width:96px;height:96px;font-size:48px;box-shadow:0 7px 12px rgba(5,10,30,.5)}
+.invitacion{padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;transform:rotate(.6deg)}
+.volver{align-self:flex-start;min-height:40px;margin-left:-6px;padding:0 6px;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:600}
+.volver.solo-icono{width:44px;height:44px;justify-content:center;padding:0;margin-left:-10px}
+.nota-clara{padding:11px 14px;border-radius:8px;background:rgba(251,243,232,.94);font-size:13.5px;font-weight:600;color:#3a3330;box-shadow:0 4px 8px rgba(5,10,30,.4)}
+.nota-clara.aviso{color:#8e1f20;text-align:left}
+.nota-clara.verde{color:#1f4a35}
+.gastos{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.barra{height:6px;border-radius:999px;background:rgba(58,51,48,.12);overflow:hidden}
+.barra>div{height:100%;border-radius:999px;background:#9e2a2b}
+
+/* Carta: niños a cargo */
+.selector-cartas{align-self:center;display:flex;gap:4px;padding:4px;margin-bottom:8px;border-radius:999px;background:rgba(255,250,242,.75);box-shadow:inset 0 0 0 1.2px rgba(98,86,80,.3);flex-wrap:wrap;justify-content:center}
+.selector-cartas button{min-height:38px;display:inline-flex;align-items:center;gap:6px;padding:0 14px;border-radius:999px;border:none;cursor:pointer;font-weight:600;font-size:13.5px;background:transparent;color:#3a3330}
+.selector-cartas button[aria-selected="true"]{background:#9e2a2b;color:#fbf3e8;box-shadow:0 2px 0 #6e1c1d;cursor:default}
+.candado{position:absolute;top:40px;right:40px;z-index:5;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(255,250,242,0);color:#6b5d56;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:background .2s}
+.candado.pulsando{background:rgba(158,42,43,.4);transition:background 1.5s linear}
