@@ -232,7 +232,7 @@ function pPerfil() {
         <div class="grano titulo" style="font-size:23px;line-height:1.15;margin-top:4px">${esSanta() ? 'Santa Claus' : 'Los Reyes Magos'}</div>
         <div style="margin-top:12px;width:100%;border-top:1.5px solid rgba(158,42,43,.55)"></div>
       </div>
-      <div style="position:absolute;left:22px;right:22px;top:222px;border:1.2px solid #3a3330;display:flex;flex-direction:column">
+      <div style="position:relative;border:1.2px solid #3a3330;display:flex;flex-direction:column">
         <div class="celda">
           <label for="p-nombre" class="maquina">Nombre:</label>
           <input id="p-nombre" class="campo-ficha" data-campo="nombre" type="text" autocomplete="given-name" maxlength="60" value="${esc(f.nombre)}" placeholder="¿Cómo te llaman en casa?">
@@ -246,7 +246,7 @@ function pPerfil() {
         </div>
         <div class="celda">
           <span class="maquina" id="familia-etiqueta">Familia:</span>
-          <div role="radiogroup" aria-labelledby="familia-etiqueta" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 22px;padding:10px 6px 6px">
+          <div role="radiogroup" aria-labelledby="familia-etiqueta" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 18px;padding:10px 8px 6px">
             ${opcionesFamilia().map(([id, nombre]) => `<button type="button" role="radio" class="opcion-familia" data-accion="elegirFamilia" data-valor="${id}" aria-checked="${f.familia === id}">${CIRCULO}${esc(nombre)}</button>`).join('')}
           </div>
         </div>
