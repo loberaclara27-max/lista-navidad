@@ -560,7 +560,8 @@ const acciones = {
     st.ocupado = true; st.error = ''; render();
     try {
       if (f.familia === 'nueva') {
-        const { error } = await sb.rpc('solicitar_familia', { p_nombre_familia: f.nombreFamilia.trim(), p_nombre_persona: f.nombre.trim(), p_emoji: f.emoji || null });
+        const foto = f.foto ? await subirFoto(f.foto) : '';
+        const { error } = await sb.rpc('solicitar_familia', { p_nombre_familia: f.nombreFamilia.trim(), p_nombre_persona: f.nombre.trim(), p_emoji: f.emoji || null, p_foto: foto || null });
         if (error) throw error;
         st.ocupado = false;
         st.solicitud = { nombre_familia: f.nombreFamilia.trim() };
@@ -1152,6 +1153,12 @@ function hojaCasa() {
         <div class="celda"><label for="h-nombre" class="maquina">Nombre:</label><input id="h-nombre" class="campo-ficha" data-hoja="nombre" type="text" maxlength="60" value="${esc(h.nombre)}" placeholder="¿Cómo se llama?"></div>
         <div class="celda"><label for="h-emoji" class="maquina">Emoji:</label><input id="h-emoji" class="campo-ficha emoji-campo" data-hoja="emoji" type="text" value="${esc(h.emoji)}" placeholder="+"></div>
       </div>
+      ${h.rol !== 'familiar' ? `<div class="celda"><span class="maquina">Foto:</span>
+        <div style="display:flex;align-items:center;gap:12px;padding-top:4px">
+          <span class="circulo-blanco foto-mini" aria-hidden="true">${h.fotoUrl ? `<img src="${esc(h.fotoUrl)}" alt="">` : esc(h.emoji || '📷')}</span>
+          <label class="boton-sec borde" style="position:relative;overflow:hidden">${h.fotoUrl ? 'Cambiar foto' : 'Subir foto'}<input type="file" accept="image/*" data-hoja-foto="1" class="subir"></label>
+        </div>
+        <span class="nota-peq">Si hay foto, sale en la Polaroid en lugar del emoji.</span></div>` : ''}
       ${roles.length > 1 ? `<div class="celda"><span class="maquina" id="rol-etq">${h.id ? 'Rol:' : 'Es…'}</span>
         <div role="radiogroup" aria-labelledby="rol-etq" class="opciones">${roles.map((r) => `<button type="button" role="radio" aria-checked="${h.rol === r}" class="opcion" data-accion="hojaRol" data-valor="${r}" style="${h.rol === r ? opc(true, ROL[r][1]) : `color:${ROL[r][1]}`}"><span class="chip-punto" aria-hidden="true" style="background:${h.rol === r ? '#fff' : ROL[r][1]}"></span>${r === 'familiar' ? 'Familiar (sin app)' : ROL[r][0]}</button>`).join('')}</div>
         ${yo && h.rol !== 'jefe' ? '<span class="nota-peq" style="color:#8e1f20">Si dejas de ser jefe no podrás volver a entrar en Mi Casa.</span>' : ''}</div>` : ''}
@@ -1256,7 +1263,7 @@ Object.assign(acciones, {
   editarPersona(v) {
     const p = persona(v); if (!p) return;
     st.error = '';
-    st.casa.hoja = { tipo: 'persona', id: p.id, nombre: p.nombre || '', emoji: p.emoji || '', rol: p.rol, gestor: p.gestionado_por || '', ocasion: p.ocasion_id || '' };
+    st.casa.hoja = { tipo: 'persona', id: p.id, nombre: p.nombre || '', emoji: p.emoji || '', rol: p.rol, gestor: p.gestionado_por || '', ocasion: p.ocasion_id || '', fotoUrl: p.foto_url || '', fotoFile: null };
     render();
   },
   regaloParaPersona(v) { st.pantalla = 'tareas'; acciones.nuevoRegaloSorpresa(v); },
@@ -1317,6 +1324,7 @@ async function guardarHojaCasa() {
   let error;
   if (h.tipo === 'persona') {
     const datos = { nombre: h.nombre.trim(), emoji: h.emoji || null, rol: h.rol, gestionado_por: h.rol === 'nino' ? (h.gestor || null) : null, ocasion_id: h.rol === 'familiar' ? (h.ocasion || null) : null };
+    if (h.fotoFile) { const url = await subirFoto(h.fotoFile); if (url) datos.foto_url = url; }
     if (h.id) {
       const p = persona(h.id);
       if (p && p.user_id) delete datos.gestionado_por;
@@ -1446,6 +1454,11 @@ app.addEventListener('change', (e) => {
   const t = e.target;
   if (t.id === 'portado') acciones.portado(t.value);
   else if (t.dataset.hoja === 'mes') st.casa.hoja.mes = t.value;
+  else if (t.dataset.hojaFoto && t.files && t.files[0]) {
+    st.casa.hoja.fotoFile = t.files[0];
+    st.casa.hoja.fotoUrl = URL.createObjectURL(t.files[0]);
+    render();
+  }
   else if (t.id === 'foto' && t.files && t.files[0]) {
     st.perfilForm.foto = t.files[0];
     st.perfilForm.fotoUrl = URL.createObjectURL(t.files[0]);
