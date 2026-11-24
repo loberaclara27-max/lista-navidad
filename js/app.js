@@ -1324,7 +1324,11 @@ async function guardarHojaCasa() {
   let error;
   if (h.tipo === 'persona') {
     const datos = { nombre: h.nombre.trim(), emoji: h.emoji || null, rol: h.rol, gestionado_por: h.rol === 'nino' ? (h.gestor || null) : null, ocasion_id: h.rol === 'familiar' ? (h.ocasion || null) : null };
-    if (h.fotoFile) { const url = await subirFoto(h.fotoFile); if (url) datos.foto_url = url; }
+    if (h.fotoFile) {
+      const url = await subirFoto(h.fotoFile);
+      if (!url) { st.ocupado = false; st.error = st.avisoFoto; return render(); }
+      datos.foto_url = url;
+    }
     if (h.id) {
       const p = persona(h.id);
       if (p && p.user_id) delete datos.gestionado_por;
@@ -1397,8 +1401,9 @@ async function subirFoto(file) {
   c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
   const blob = await new Promise((res) => c.toBlob(res, 'image/jpeg', 0.85));
   const ruta = `${st.uid}/${Date.now()}.jpg`;
-  const { error } = await sb.storage.from('fotos').upload(ruta, blob, { contentType: 'image/jpeg', upsert: true });
-  if (error) { console.error(error); return ''; }
+  const { error } = await sb.storage.from('fotos').upload(ruta, blob, { contentType: 'image/jpeg', upsert: false });
+  if (error) { console.error(error); st.avisoFoto = 'No hemos podido subir la foto. Inténtalo otra vez.'; return ''; }
+  st.avisoFoto = '';
   return sb.storage.from('fotos').getPublicUrl(ruta).data.publicUrl;
 }
 
