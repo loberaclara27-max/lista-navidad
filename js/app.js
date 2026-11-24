@@ -395,7 +395,15 @@ function pFicha() {
         ${campo('tienda', 'Tienda', f.tienda, 'placeholder="¿Dónde?"')}
         ${campo('talla', 'Talla', f.talla, 'placeholder="M, 42…"')}
       </div>
-      ${campo('enlace', 'Enlace', f.enlace, 'placeholder="https://…" style="font-family:Inter,sans-serif;font-size:15px"')}
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span class="etiqueta">${f.enlaces.length > 1 ? 'Enlaces' : 'Enlace'}</span>
+        ${f.enlaces.map((u, i) => `<div style="display:flex;align-items:center;gap:6px">
+          <label for="f-enlace-${i}" class="oculto-accesible">Enlace ${i + 1}</label>
+          <input id="f-enlace-${i}" class="campo" data-enlace="${i}" type="url" inputmode="url" autocapitalize="off" value="${esc(u)}" placeholder="https://…" style="font-family:Inter,sans-serif;font-size:15px">
+          ${f.enlaces.length > 1 ? `<button type="button" data-accion="quitarEnlace" data-valor="${i}" aria-label="Quitar enlace ${i + 1}" style="width:36px;height:36px;flex-shrink:0;background:none;border:none;cursor:pointer;color:#6b5d56;display:flex;align-items:center;justify-content:center">${CERRAR}</button>` : ''}
+        </div>`).join('')}
+        ${f.enlaces.length < 5 ? '<button type="button" class="anadir-enlace" data-accion="anadirEnlace">+ Añadir otro enlace</button>' : ''}
+      </div>
       <div style="display:flex;flex-direction:column;gap:2px">
         <label for="f-obs" class="etiqueta">Más pistas</label>
         <textarea id="f-obs" class="campo" data-ficha="observaciones" rows="3" placeholder="Color, modelo… cuanto más concreto, más ${esSanta() ? 'acierta Santa' : 'aciertan los Reyes'}" style="resize:none;line-height:30px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 29px,rgba(120,92,76,.32) 29px,rgba(120,92,76,.32) 30px);border-bottom:none">${esc(f.observaciones)}</textarea>
@@ -593,10 +601,13 @@ const acciones = {
     await guardarCarta(false);
   },
   async guardarCarta() { await guardarCarta(true); },
-  nuevoDeseo() { st.ficha = { id: null, nombre: '', tienda: '', talla: '', enlace: '', observaciones: '' }; render(); setTimeout(() => document.getElementById('f-nombre')?.focus(), 30); },
+  nuevoDeseo() { st.ficha = { id: null, nombre: '', tienda: '', talla: '', enlaces: [''], observaciones: '' }; render(); setTimeout(() => document.getElementById('f-nombre')?.focus(), 30); },
   editarDeseo(id) {
     const d = st.deseos.find((x) => x.id === id);
-    if (d) { st.ficha = { id: d.id, nombre: d.nombre || '', tienda: d.tienda || '', talla: d.talla || '', enlace: d.enlace || '', observaciones: d.observaciones || '' }; render(); }
+    if (d) { st.ficha = { id: d.id, nombre: d.nombre || '', tienda: d.tienda || '', talla: d.talla || '', enlaces: (String(d.enlace || '').split(/[\s,]+/).filter(Boolean).length ? String(d.enlace).split(/[\s,]+/).filter(Boolean) : ['']), observaciones: d.observaciones || '' }; render(); }
+  },
+  anadirEnlace() { st.ficha.enlaces.push(''); render(); setTimeout(() => document.getElementById(`f-enlace-${st.ficha.enlaces.length - 1}`)?.focus(), 30); },
+  quitarEnlace(i) { st.ficha.enlaces.splice(Number(i), 1); render();
   },
   cerrarFicha() { st.ficha = null; render(); },
   async borrarDeseo() {
@@ -641,7 +652,8 @@ async function guardarRegalo() {
   const f = st.ficha;
   if (!f || !f.nombre.trim()) return;
   st.ocupado = true;
-  const args = { p_nombre: f.nombre, p_tienda: f.tienda, p_talla: f.talla, p_enlace: f.enlace, p_observaciones: f.observaciones };
+  const enlaces = f.enlaces.map((u) => u.trim()).filter(Boolean).map((u) => (/^https?:\/\//i.test(u) ? u : `https://${u}`));
+  const args = { p_nombre: f.nombre, p_tienda: f.tienda, p_talla: f.talla, p_enlace: enlaces.join('\n'), p_observaciones: f.observaciones };
   const { error } = f.id
     ? await sb.rpc('editar_deseo', Object.assign({ p_id: f.id }, args))
     : await sb.rpc('crear_deseo', Object.assign({ p_perfil: perfilCarta().id }, args));
@@ -1449,6 +1461,8 @@ app.addEventListener('input', (e) => {
     st.casa.hoja[t.dataset.hoja] = v;
     const h = st.casa.hoja;
     const btn = document.getElementById('btn-hoja'); if (btn) btn.disabled = !((h.nombre || '').trim() && (h.tipo !== 'persona' || h.rol !== 'familiar' || h.ocasion));
+  } else if (t.dataset.enlace) {
+    st.ficha.enlaces[Number(t.dataset.enlace)] = t.value;
   } else if (t.dataset.ficha) {
     st.ficha[t.dataset.ficha] = t.value;
     const btn = document.getElementById('btn-regalo'); if (btn) btn.disabled = !st.ficha.nombre.trim();
