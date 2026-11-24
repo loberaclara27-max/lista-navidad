@@ -1031,14 +1031,15 @@ function casaFamilia() {
       </div>
     </div>`;
 }
-function etiquetasRegalos(lista) {
-  return lista.map((r) => { const e = estadoVisible(r); return `
-    <div class="etiqueta-caja azul"><div class="tag papel-sin-sombra estatica">
+function etiquetasRegalos(lista, modo) {
+  return lista.map((r) => { const e = estadoVisible(r); const para = persona(r.para_perfil_id) || {}; const oc = st.fam.ocasiones.find((o) => o.id === r.ocasion_id); return `
+    <div class="etiqueta-caja azul"><button type="button" class="tag papel-sin-sombra" data-accion="editarRegaloJefe" data-valor="${r.id}" aria-label="${esc(r.nombre)}. Editar regalo">
       <span class="agujero" aria-hidden="true"></span>
+      ${modo === 'elfo' ? `<span class="maquina para-linea">Para ${esc(para.nombre || '')} <span style="letter-spacing:0">${esc(para.emoji || '')}</span></span>` : ''}
       <span class="mano" style="font-size:23px;padding-right:104px;line-height:1.05">${esc(r.nombre)}</span>
-      <span class="maquina" style="font-size:10px;margin-top:2px">${r.elfo_perfil_id ? `Elfo: ${esc(nombreDe(r.elfo_perfil_id))}` : 'Sin elfo'}</span>
+      <span class="maquina" style="font-size:10px;margin-top:2px">${modo === 'elfo' ? (oc ? esc(`${oc.icono || ''} ${oc.nombre}`) : 'Sin ocasión') : (r.elfo_perfil_id ? `Elfo: ${esc(nombreDe(r.elfo_perfil_id))}` : 'Sin elfo')}</span>
       ${chip(EST[e], 'position:absolute;right:12px;top:10px')}
-    </div></div>`; }).join('');
+    </button></div>`; }).join('');
 }
 function casaPersona() {
   const p = persona(st.casa.persona);
@@ -1069,7 +1070,13 @@ function casaPersona() {
     ${yo ? '<div class="nota-clara">🤫 Tus regalos son sorpresa: aquí no puedes verlos.</div>' : ''}
     ${grupos.map((g) => `<section class="grupo"><h3 class="maquina cabecera-grupo claro-azul">${esc(`${g.oc.icono || ''} ${g.oc.nombre}`)} <span style="font-weight:400;opacity:.9">· ${reg(g.items.length)}</span><span class="raya" aria-hidden="true"></span></h3>${etiquetasRegalos(g.items)}</section>`).join('')}
     ${sinOc.length ? `<section class="grupo"><h3 class="maquina cabecera-grupo claro-azul">Sin ocasión <span style="font-weight:400;opacity:.9">· ${reg(sinOc.length)}</span><span class="raya" aria-hidden="true"></span></h3>${etiquetasRegalos(sinOc)}</section>` : ''}
-    ${!yo && !rs.length ? '<div class="nota-clara aviso">⚠️ Todavía no tiene ningún regalo.</div>' : ''}`;
+    ${!yo && !rs.length ? '<div class="nota-clara aviso">⚠️ Todavía no tiene ningún regalo.</div>' : ''}
+    ${!yo && (p.rol === 'elfo' || p.rol === 'jefe') ? (() => {
+      const lleva = st.fam.regalos.filter((r) => r.elfo_perfil_id === p.id);
+      return `<section class="grupo"><h3 class="maquina cabecera-grupo claro-azul">🧝 Lleva como elfo <span style="font-weight:400;opacity:.9">· ${reg(lleva.length)}</span><span class="raya" aria-hidden="true"></span></h3>
+        ${lleva.length ? `<p class="claro-azul" style="margin:-4px 0 2px;font-size:12.5px">Toca un regalo para cambiarlo, pasárselo a otro elfo o dejarlo sin elfo.</p>${etiquetasRegalos(lleva, 'elfo')}` : '<div class="nota-clara">No tiene ningún regalo adoptado.</div>'}
+        <p class="claro-azul" style="margin:0;font-size:11.5px;opacity:.8">No aparecen los regalos que son para ti.</p></section>`;
+    })() : ''}`;
 }
 function participantes(o) {
   return st.fam.perfiles.filter((p) => !esFamiliar(p) || p.ocasion_id === o.id);
@@ -1192,7 +1199,28 @@ function hojaCasa() {
         <div class="celda"><label for="h-mes" class="maquina">Mes:</label><select id="h-mes" class="campo-ficha" data-hoja="mes"><option value="">Sin fecha</option>${MESES_LARGOS.map((m, i) => `<option value="${i + 1}" ${String(h.mes) === String(i + 1) ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
       </div>`;
   }
-  const ok = (h.nombre || '').trim() && (h.tipo !== 'persona' || h.rol !== 'familiar' || h.ocasion);
+  if (h.tipo === 'regalo') {
+    const r = st.fam.regalos.find((x) => x.id === h.id);
+    const para = persona(r.para_perfil_id) || {};
+    titulo = esc(r.nombre);
+    const elfos = [{ id: '', nombre: 'Nadie', emoji: '🚫' }].concat(elfosFamilia());
+    cuerpo = `
+      <div class="celda"><span class="maquina">Para:</span><span class="mano m22">${esc(para.emoji || '')} ${esc(para.nombre || '')}</span></div>
+      <div class="celda" style="padding-right:0"><span class="maquina" id="elf-etq">Elfo:</span>
+        <div role="radiogroup" aria-labelledby="elf-etq" class="fila-pagadores">${elfos.map((e) => `<button type="button" role="radio" aria-checked="${h.elfo === e.id}" class="pagador" data-accion="hojaElfo" data-valor="${e.id}"><span class="circulo-pagador${h.elfo === e.id ? ' activo' : ''}" aria-hidden="true">${e.id ? fotoOEmoji(e) : '🚫'}</span><span class="nombre-pagador">${e.id ? esc(nombreDe(e.id)) : 'Sin elfo'}</span></button>`).join('')}</div>
+        ${h.elfo === '' ? '<span class="nota-peq">Vuelve a Adoptar para que lo coja otro elfo.</span>' : ''}</div>
+      <div class="celda"><span class="maquina" id="oc2-etq">Ocasión:</span>
+        <div role="radiogroup" aria-labelledby="oc2-etq" class="opciones">${st.fam.ocasiones.map((o) => `<button type="button" role="radio" aria-checked="${h.ocasion === o.id}" class="opcion" data-accion="hojaOcasion" data-valor="${o.id}" style="${opc(h.ocasion === o.id, '#24402f')}">${esc(o.icono || '')} ${esc(o.nombre)}</button>`).join('')}</div></div>
+      <div class="celda"><span class="maquina" id="es2-etq">Estado:</span>
+        <div role="radiogroup" aria-labelledby="es2-etq" class="opciones">${['pendiente', 'pedido', 'en_casa', 'envuelto'].map((k) => `<button type="button" role="radio" aria-checked="${h.estado === k}" class="opcion" data-accion="hojaEstado" data-valor="${k}" style="${h.estado === k ? `background:${EST[k][1]};color:#fff;border-color:${EST[k][1]}` : `color:${EST[k][1]}`}"><span class="chip-punto" style="background:${h.estado === k ? '#fff' : EST[k][1]}" aria-hidden="true"></span>${EST[k][0]}</button>`).join('')}</div></div>
+      <div class="dos-col">
+        <div class="celda"><label for="h-precio" class="maquina">Precio:</label><input id="h-precio" class="campo-ficha" data-hoja="precio" type="text" inputmode="decimal" value="${esc(h.precio)}" placeholder="0,00"></div>
+        <div class="celda"><label for="h-esc" class="maquina">Escondido en:</label><input id="h-esc" class="campo-ficha" data-hoja="escondite" type="text" value="${esc(h.escondite)}" placeholder="—"></div>
+      </div>
+      ${r.tienda || r.talla ? `<div class="celda"><span class="maquina">Tienda / talla:</span><span class="mano m20">${esc([r.tienda, r.talla].filter(Boolean).join(' · '))}</span></div>` : ''}
+      ${filaEnlaces(r)}`;
+  }
+  const ok = h.tipo === 'regalo' || ((h.nombre || '').trim() && (h.tipo !== 'persona' || h.rol !== 'familiar' || h.ocasion));
   return `
   <div class="velo velo-casa">
     <form class="ficha" role="dialog" aria-modal="true" aria-labelledby="hc-t" data-form="hojaCasa" novalidate>
@@ -1289,7 +1317,15 @@ Object.assign(acciones, {
   cerrarHoja() { st.casa.hoja = null; st.error = ''; render(); },
   hojaRol(v) { st.casa.hoja.rol = v; render(); },
   hojaGestor(v) { st.casa.hoja.gestor = v; render(); },
-  hojaOcasion(v) { st.casa.hoja.ocasion = v; render(); },
+  hojaOcasion(v) { st.casa.hoja.ocasion = st.casa.hoja.tipo === 'regalo' && st.casa.hoja.ocasion === v ? '' : v; render(); },
+  hojaElfo(v) { st.casa.hoja.elfo = v; if (!v) st.casa.hoja.estado = 'pendiente'; render(); },
+  hojaEstado(v) { st.casa.hoja.estado = v; render(); },
+  editarRegaloJefe(id) {
+    const r = st.fam.regalos.find((x) => x.id === id); if (!r) return;
+    st.error = '';
+    st.casa.hoja = { tipo: 'regalo', id, elfo: r.elfo_perfil_id || '', ocasion: r.ocasion_id || '', estado: r.estado === 'entregado' ? 'envuelto' : r.estado, precio: r.precio != null ? String(r.precio).replace('.', ',') : '', escondite: r.escondite || '' };
+    render();
+  },
   async copiarEnlace(url) {
     try { await navigator.clipboard.writeText(url); } catch (e) { window.prompt('Copia el enlace:', url); }
     st.casa.copiado = true; render();
@@ -1334,7 +1370,15 @@ async function guardarHojaCasa() {
   const fam = st.perfil.familia_id;
   st.ocupado = true; st.error = ''; render();
   let error;
-  if (h.tipo === 'persona') {
+  if (h.tipo === 'regalo') {
+    const r = st.fam.regalos.find((x) => x.id === h.id);
+    const precio = String(h.precio || '').trim() ? Number(String(h.precio).replace(/\s|€/g, '').replace(',', '.')) : null;
+    if (precio != null && !(precio >= 0)) { st.ocupado = false; st.error = 'Escribe el precio como 12,50'; return render(); }
+    const datos = { elfo_perfil_id: h.elfo || null, estado: h.estado, precio, escondite: (h.escondite || '').trim() || null };
+    if (h.elfo && h.elfo !== r.elfo_perfil_id && (!r.pagado_por_perfil_id || r.pagado_por_perfil_id === r.elfo_perfil_id) && !r.reembolsado) datos.pagado_por_perfil_id = h.elfo;
+    if ((h.ocasion || null) !== (r.ocasion_id || null)) datos.ocasion_id = h.ocasion || null;
+    ({ error } = await sb.from('regalos').update(datos).eq('id', h.id));
+  } else if (h.tipo === 'persona') {
     const datos = { nombre: h.nombre.trim(), emoji: h.emoji || null, rol: h.rol, gestionado_por: h.rol === 'nino' ? (h.gestor || null) : null, ocasion_id: h.rol === 'familiar' ? (h.ocasion || null) : null };
     if (h.fotoFile) {
       const url = await subirFoto(h.fotoFile);
@@ -1460,7 +1504,7 @@ app.addEventListener('input', (e) => {
     if (t.dataset.hoja === 'dia') { v = v.replace(/\D/g, '').slice(0, 2); t.value = v; }
     st.casa.hoja[t.dataset.hoja] = v;
     const h = st.casa.hoja;
-    const btn = document.getElementById('btn-hoja'); if (btn) btn.disabled = !((h.nombre || '').trim() && (h.tipo !== 'persona' || h.rol !== 'familiar' || h.ocasion));
+    const btn = document.getElementById('btn-hoja'); if (btn) btn.disabled = !(h.tipo === 'regalo' || ((h.nombre || '').trim() && (h.tipo !== 'persona' || h.rol !== 'familiar' || h.ocasion)));
   } else if (t.dataset.enlace) {
     st.ficha.enlaces[Number(t.dataset.enlace)] = t.value;
   } else if (t.dataset.ficha) {
